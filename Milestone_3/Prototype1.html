@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Kitchen - Prototype</title>
+    <link rel="stylesheet" href="Prototype1Style.css">
+</head>
+<body>
+    <div class="mobile-frame">
+        <header class="app-header">
+            <h1>My Kitchen</h1>
+            <div id="cart-badge" class="hidden">0</div>
+        </header>
+
+        <main class="app-content">
+            
+            <section id="view-home" class="view active">
+                <h2>Local Chefs</h2>
+                <div class="chef-card" onclick="app.openChefProfile('fatima')">
+                    <div class="card-img" style="background-color: #ffcccc;"></div>
+                    <div class="card-info">
+                        <h3>Fatima's Kitchen</h3>
+                        <p>⭐ 4.9 (47 Reviews) • Topi Campus</p>
+                    </div>
+                </div>
+                <div class="chef-card">
+                    <div class="card-img" style="background-color: #ccffcc;"></div>
+                    <div class="card-info">
+                        <h3>Chef Ali</h3>
+                        <p>⭐ 4.5 (12 Reviews) • Swabi Gate</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-chef-profile" class="view hidden">
+                <button class="back-btn" onclick="app.switchView('view-home')">← Back</button>
+                <h2 id="chef-name-title">Fatima's Kitchen</h2>
+                <div class="menu-item">
+                    <div>
+                        <h4>5-Day Dinner Subscription</h4>
+                        <p>Mon: Karahi, Tue: Daal Chawal...</p>
+                        <p class="price">Rs. 1500</p>
+                    </div>
+                    <button class="btn-primary" onclick="app.checkout('5-Day Plan', 1500)">Subscribe</button>
+                </div>
+            </section>
+
+            <section id="view-specials" class="view hidden">
+                <h2>Today's Specials</h2>
+                <div class="menu-item" id="special-halwa">
+                    <div>
+                        <h4>Gajar ka Halwa</h4>
+                        <p class="limit-text">Only 2 portions left! Ends at 5:00 PM</p>
+                        <p class="price">Rs. 250</p>
+                    </div>
+                    <button id="btn-halwa" class="btn-primary" onclick="app.checkout('Gajar ka Halwa', 250)">Order Now</button>
+                </div>
+            </section>
+
+            <section id="view-profile" class="view hidden">
+                <h2>Delivery Profile</h2>
+                <div class="form-group">
+                    <label>Hostel Details</label>
+                    <input type="text" id="hostel-input" value="Hostel 12, Room 10">
+                </div>
+                <div class="form-group">
+                    <label>Delivery Notes</label>
+                    <textarea id="notes-input" rows="3">Leave at reception.</textarea>
+                </div>
+                <button class="btn-primary" onclick="app.saveProfile()">Save Preferences</button>
+                <p id="profile-msg" class="success-msg hidden">Saved successfully!</p>
+            </section>
+        </main>
+
+        <div id="checkout-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Confirm Order</h3>
+                <p id="checkout-item-name"></p>
+                <p id="checkout-price"></p>
+                <hr>
+                <p><strong>Delivering to:</strong> <span id="checkout-address"></span></p>
+                <p class="small-text">Payment via JazzCash</p>
+                <button class="btn-success" onclick="app.confirmOrder()">Pay & Confirm</button>
+                <button class="btn-secondary" onclick="app.closeModal()">Cancel</button>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="app.switchView('view-home', this)">Home</button>
+            <button class="nav-item" onclick="app.switchView('view-specials', this)">Specials</button>
+            <button class="nav-item" onclick="app.switchView('view-profile', this)">Profile</button>
+        </nav>
+    </div>
+
+    <script src="Prototype1Back.js"></script>
+</body>
+</html>
