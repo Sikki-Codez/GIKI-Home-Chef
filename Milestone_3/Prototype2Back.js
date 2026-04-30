@@ -51,9 +51,21 @@ const app = {
         document.getElementById('checkout-modal').classList.remove('hidden');
     },
 
+    // NEW: Triggers the toast notification animation
+    showToast: function(message) {
+        const toast = document.getElementById('app-toast');
+        toast.innerText = message;
+        toast.classList.add('show');
+        
+        // Hides it after 3 seconds
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    },
+
     confirmOrder: function() {
         const itemName = document.getElementById('checkout-item-name').innerText;
-        alert("Payment successful! Your order is confirmed.");
+        
+        // REPLACED: alert() is now showToast()
+        this.showToast("Payment successful! Your order is confirmed.");
         this.closeModal();
 
         if(itemName.includes('5-Day')) {
