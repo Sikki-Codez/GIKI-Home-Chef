@@ -1,77 +1,36 @@
-# GIKI Home Chef
+# My Kitchen - Home Chef App Prototype
 
-A mobile web application prototype for connecting students with local home chefs for meal delivery and subscriptions.
-
-## Project Overview
-
-This project consists of two interactive prototypes demonstrating different approaches to meal planning and ordering from local chefs. The application targets university students who want convenient access to home-cooked meals.
+This repository contains the front-end prototypes for "My Kitchen," a localized food delivery platform[cite: 3]. It is designed to connect university students with local home chefs, allowing them to subscribe to weekly meal plans or order daily specials[cite: 3, 4]. The project was developed utilizing an iterative Human-Computer Interaction (HCI) design process to optimize usability and user flow.
 
 ## Features
+* **Weekly Subscriptions**: Users can browse home chefs and subscribe to 5-day dinner or lunch meal plans[cite: 3, 6].
+* **Daily Specials**: Users can order limited-quantity daily specials before a specified cutoff time[cite: 3, 6].
+* **Delivery Profile**: Users can save their specific hostel details and custom delivery instructions for the riders[cite: 3, 6].
+* **Calendar Management**: A visual "My Week" dashboard allowing users to track their upcoming subscribed meals[cite: 6, 7].
 
-- **Local Chef Discovery**: Browse and explore profiles of nearby home chefs
-- **Meal Subscriptions**: Subscribe to weekly dinner plans
-- **Daily Specials**: Order limited-time special dishes
-- **Weekly Meal Planning**: Plan and manage meals for the entire week (Prototype 2)
-- **Delivery Profile Management**: Set delivery preferences and notes
-- **Secure Checkout**: Integrated payment via JazzCash
+## Iterative Design Process
+This repository contains two distinct versions of the prototype to demonstrate the testing and iteration phases:
 
-## Prototypes
+### Prototype 1 (Initial Build)
+* Built using standard card-based e-commerce layouts[cite: 3, 5].
+* Utilizes native browser `window.alert()` for payment confirmations and simple text toggles for profile saves[cite: 4].
+* Simulates the "Sold Out" error-prevention state using a static 5-second timer[cite: 4].
+* Features a stark white and grey color palette[cite: 5].
 
-### Prototype 1
-- Focuses on daily specials and chef profiles
-- Navigation: Home, Specials, Profile
+### Prototype 2 (Revised Build)
+* **Dynamic Menus**: Upgraded the chef profiles to dynamically inject full 5-day bulleted menus via JavaScript based on the selected chef, replacing the truncated text from the first version[cite: 6, 7].
+* **Toast Notifications**: Replaced jarring browser alerts with native, animated in-app "Toast" notifications for a seamless, immersive mobile experience[cite: 6, 8].
+* **Calendar Integration**: Added a "My Week" bottom navigation tab with a calendar grid, allowing users to visually track their meals after purchasing a subscription[cite: 6, 7].
+* **Real-Time Error Prevention**: Upgraded the "Sold Out" logic to read the user's actual system clock, automatically disabling the checkout button past 5:00 PM[cite: 7].
+* **Aesthetic Overhaul**: Implemented a slate-blue background with warmer pastel colors for the interface to make the app feel more inviting[cite: 8].
 
-### Prototype 2
-- Includes weekly calendar view for meal planning
-- Enhanced navigation: Home, My Week, Specials, Profile
-- Added toast notifications for user feedback
-
-## Technologies Used
-
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
-
-## File Structure
-
-```
-GIKI-Home-Chef/
-├── Milestone_3/
-│   ├── Prototype1.html
-│   ├── Prototype1Back.js
-│   ├── Prototype1Style.css
-│   ├── Prototype2.html
-│   ├── Prototype2Back.js
-│   ├── Prototype2Style.css
-│   └── images/
-│       ├── chicken-karahi.jpg
-│       ├── daal-chawal.jpg
-│       └── gajar-halwa.jpeg
-└── README.md
-```
+## Technology Stack
+* **HTML5**[cite: 3, 6]
+* **CSS3**[cite: 5, 8]
+* **Vanilla JavaScript**[cite: 4, 7]
+* *Note: This project uses pure vanilla web technologies. No external libraries or frameworks (e.g., React, Bootstrap) are required.*
 
 ## How to Run
-
-1. Clone or download the repository
-2. Open any of the HTML files in a modern web browser
-3. The prototypes are designed for mobile viewing - use browser dev tools to simulate mobile devices
-
-## Browser Compatibility
-
-- Chrome (recommended)
-- Firefox
-- Safari
-- Edge
-
-## Development Notes
-
-This is a front-end only prototype with mock data and simulated functionality. Real implementation would require:
-- Backend API for chef and meal data
-- User authentication system
-- Payment gateway integration
-- Real-time order tracking
-- Database for user profiles and orders
-
-## Course Information
-
-This project was developed as part of the Human-Computer Interaction (HCI) course at GIKI (Ghulam Ishaq Khan Institute).
+1. Clone or download this repository to your local machine.
+2. Ensure you have an `images/` directory in the root folder containing the referenced food and chef images.
+3. Open `Prototype1.html` or `Prototype2.html` directly in any modern web browser to interact with the builds.
