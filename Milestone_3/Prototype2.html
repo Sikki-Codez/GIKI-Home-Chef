@@ -24,8 +24,8 @@
                         <p>⭐ 4.9 (47 Reviews) • Topi Campus</p>
                     </div>
                 </div>
-                <div class="chef-card">
-                    <div class="card-img" style="background-image: url('images/daal-chawal.jpg'); background-size: cover; background-position: center;"></div>
+                <div class="chef-card" onclick="app.openChefProfile('ali')">
+                    <div class="card-img" style="background-image: url('images/Daal%20Chawal.jpg'); background-size: cover; background-position: center;"></div>
                     <div class="card-info">
                         <h3>Chef Ali</h3>
                         <p>⭐ 4.5 (12 Reviews) • Swabi Gate</p>
@@ -35,14 +35,17 @@
 
             <section id="view-chef-profile" class="view hidden">
                 <button class="back-btn" onclick="app.switchView('view-home', document.getElementById('nav-home'))">← Back</button>
-                <h2 id="chef-name-title">Fatima's Kitchen</h2>
-                <div class="menu-item">
-                    <div>
-                        <h4>5-Day Dinner Subscription</h4>
-                        <p>Mon: Karahi, Tue: Daal Chawal...</p>
-                        <p class="price">Rs. 1500</p>
+                
+                <h2 id="chef-name-title">Chef Name</h2>
+                <div class="menu-item" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%;">
+                        <h4 id="plan-name">Subscription Plan</h4>
+                        <p class="price" id="plan-price" style="margin-bottom: 10px;">Rs. 0</p>
+                        <strong style="font-size: 0.95rem;">This Week's Menu:</strong>
+                        <ul id="full-menu-list" style="list-style-type: none; padding: 0; margin: 10px 0; font-size: 0.9rem; color: #555; line-height: 1.6;">
+                        </ul>
                     </div>
-                    <button class="btn-primary" onclick="app.checkout('5-Day Plan', 1500)">Subscribe</button>
+                    <button id="btn-subscribe" class="btn-primary" style="width: 100%; margin-top: 10px;">Subscribe</button>
                 </div>
             </section>
 
@@ -121,7 +124,6 @@
             <button id="nav-profile" class="nav-item" onclick="app.switchView('view-profile', this)">Profile</button>
         </nav>
 
-        <!-- NEW: In-App Toast Notification Banner -->
         <div id="app-toast">Payment successful! Your order is confirmed.</div>
     </div>
 

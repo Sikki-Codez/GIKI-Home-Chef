@@ -3,6 +3,7 @@ const app = {
         hostel: "Hostel 12, Room 10",
         notes: "Leave at reception."
     },
+    currentChef: null, 
 
     init: function() {
         this.checkTimeForSpecials();
@@ -37,9 +38,42 @@ const app = {
     },
 
     openChefProfile: function(chefId) {
+        this.switchView('view-chef-profile');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+        const title = document.getElementById('chef-name-title');
+        const planName = document.getElementById('plan-name');
+        const planPrice = document.getElementById('plan-price');
+        const menuList = document.getElementById('full-menu-list');
+        const btnSub = document.getElementById('btn-subscribe');
+
+        menuList.innerHTML = ''; 
+
         if(chefId === 'fatima') {
-            this.switchView('view-chef-profile');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            this.currentChef = "Fatima's Kitchen";
+            title.innerText = "Fatima's Kitchen";
+            planName.innerText = "5-Day Dinner Subscription";
+            planPrice.innerText = "Rs. 1500";
+            
+            const fatimaMenu = ["Mon: Karahi", "Tue: Daal Chawal", "Wed: Aloo Gosht", "Thu: Biryani", "Fri: Koftay"];
+            fatimaMenu.forEach(item => {
+                menuList.innerHTML += `<li>• ${item}</li>`;
+            });
+
+            btnSub.onclick = () => this.checkout('5-Day Plan (Fatima)', 1500);
+            
+        } else if (chefId === 'ali') {
+            this.currentChef = "Chef Ali";
+            title.innerText = "Chef Ali";
+            planName.innerText = "5-Day Lunch Subscription";
+            planPrice.innerText = "Rs. 1300";
+            
+            const aliMenu = ["Mon: Pulao", "Tue: Qorma", "Wed: Haleem", "Thu: Nihari", "Fri: Sabzi"];
+            aliMenu.forEach(item => {
+                menuList.innerHTML += `<li>• ${item}</li>`;
+            });
+
+            btnSub.onclick = () => this.checkout('5-Day Plan (Ali)', 1300);
         }
     },
 
@@ -51,25 +85,22 @@ const app = {
         document.getElementById('checkout-modal').classList.remove('hidden');
     },
 
-    // NEW: Triggers the toast notification animation
     showToast: function(message) {
         const toast = document.getElementById('app-toast');
         toast.innerText = message;
         toast.classList.add('show');
         
-        // Hides it after 3 seconds
         setTimeout(() => toast.classList.remove('show'), 3000);
     },
 
     confirmOrder: function() {
         const itemName = document.getElementById('checkout-item-name').innerText;
         
-        // REPLACED: alert() is now showToast()
         this.showToast("Payment successful! Your order is confirmed.");
         this.closeModal();
 
         if(itemName.includes('5-Day')) {
-            this.populateCalendar();
+            this.populateCalendar(itemName);
             this.switchView('view-calendar', document.getElementById('nav-week'));
         } else {
             this.switchView('view-home', document.getElementById('nav-home')); 
@@ -108,15 +139,23 @@ const app = {
         }
     },
 
-    populateCalendar: function() {
-        const weeklyMenu = ["Karahi", "Daal Chawal", "Aloo Gosht", "Biryani", "Koftay"];
+    populateCalendar: function(planName) {
+        let weeklyMenu = [];
+        let chefName = this.currentChef;
+
+        if (planName.includes('Fatima')) {
+            weeklyMenu = ["Karahi", "Daal Chawal", "Aloo Gosht", "Biryani", "Koftay"];
+        } else if (planName.includes('Ali')) {
+            weeklyMenu = ["Pulao", "Qorma", "Haleem", "Nihari", "Sabzi"];
+        }
+        
         const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
         
         days.forEach((day, index) => {
             const content = document.querySelector(`#cal-${day} .day-content`);
             content.classList.remove('empty');
             content.classList.add('filled');
-            content.innerHTML = `<strong>Fatima's Kitchen</strong><br><span style="font-size:0.9rem; color:#555;">${weeklyMenu[index]}</span>`;
+            content.innerHTML = `<strong>${chefName}</strong><br><span style="font-size:0.9rem; color:#555;">${weeklyMenu[index]}</span>`;
             content.onclick = null; 
         });
     }
