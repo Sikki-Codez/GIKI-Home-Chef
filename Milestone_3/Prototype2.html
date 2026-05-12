@@ -3,128 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Kitchen - Prototype 2</title>
+    <title>My Kitchen</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Prototype2Style.css">
 </head>
 <body>
     <div class="mobile-frame">
         <header class="app-header">
             <h1>My Kitchen</h1>
-            <div id="cart-badge" class="hidden">0</div>
+            <!-- HCI: Nielsen #1 - Visibility of System Status: cart badge updates in real-time -->
+            <button id="cart-badge" class="cart-badge hidden" aria-label="Open Cart" onclick="app.openCart()">0</button>
         </header>
 
         <main class="app-content">
-            
-            <section id="view-home" class="view active">
+
+            <!-- HCI: Recognition over Recall - Role selection on first screen -->
+            <section id="view-login" class="view active">
+                <div class="login-container">
+                    <h2>Welcome to My Kitchen</h2>
+                    <p class="subtitle" style="text-align:center">Home-cooked meals for GIKI students</p>
+                    <div style="display:flex;flex-direction:column;gap:16px;margin-top:40px">
+                        <button class="btn-primary" onclick="app.login('student')" style="padding:16px;font-size:18px">🎓 Login as Student</button>
+                        <button class="btn-secondary" onclick="app.login('chef')" style="padding:16px;font-size:18px">👩‍🍳 Login as Chef</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOME VIEW -->
+            <section id="view-home" class="view">
                 <h2>Local Chefs</h2>
-                <div class="chef-card" onclick="app.openChefProfile('fatima')">
-                    <div class="card-img" style="background-image: url('images/chicken-karahi.jpg'); background-size: cover; background-position: center;"></div>
-                    <div class="card-info">
-                        <h3>Fatima's Kitchen</h3>
-                        <p>⭐ 4.9 (47 Reviews) • Topi Campus</p>
-                    </div>
-                </div>
-                <div class="chef-card">
-                    <div class="card-img" style="background-image: url('images/daal-chawal.jpg'); background-size: cover; background-position: center;"></div>
-                    <div class="card-info">
-                        <h3>Chef Ali</h3>
-                        <p>⭐ 4.5 (12 Reviews) • Swabi Gate</p>
-                    </div>
-                </div>
+                <!-- HCI: Fitts's Law - Large tappable card area for easy navigation -->
+                <div id="home-chef-list"></div>
             </section>
 
-            <section id="view-chef-profile" class="view hidden">
+            <!-- CHEF PROFILE VIEW -->
+            <section id="view-chef-profile" class="view">
+                <!-- HCI: User Control & Freedom - Emergency Exit -->
                 <button class="back-btn" onclick="app.switchView('view-home', document.getElementById('nav-home'))">← Back</button>
-                <h2 id="chef-name-title">Fatima's Kitchen</h2>
-                <div class="menu-item">
-                    <div>
-                        <h4>5-Day Dinner Subscription</h4>
-                        <p>Mon: Karahi, Tue: Daal Chawal...</p>
-                        <p class="price">Rs. 1500</p>
-                    </div>
-                    <button class="btn-primary" onclick="app.checkout('5-Day Plan', 1500)">Subscribe</button>
+                <div id="chef-profile-header"></div>
+                <div class="tabs" role="tablist">
+                    <button class="tab-btn active" role="tab" onclick="app.switchChefTab('subscribe')">Subscribe</button>
+                    <button class="tab-btn" role="tab" onclick="app.switchChefTab('order')">Order Today</button>
                 </div>
+                <div id="tab-subscribe" class="tab-content active" role="tabpanel"></div>
+                <div id="tab-order" class="tab-content" role="tabpanel"></div>
             </section>
 
-            <section id="view-calendar" class="view hidden">
+            <!-- MY WEEK CALENDAR VIEW -->
+            <section id="view-calendar" class="view">
                 <h2>My Week</h2>
-                <p class="small-text" style="text-align: left; margin-bottom: 15px;">Manage your upcoming dinners.</p>
-                <div id="calendar-grid">
-                    <div class="calendar-day" id="cal-mon">
-                        <div class="day-label">Mon</div>
-                        <div class="day-content empty" onclick="app.switchView('view-home', document.getElementById('nav-home'))">+ Add Meal</div>
-                    </div>
-                    <div class="calendar-day" id="cal-tue">
-                        <div class="day-label">Tue</div>
-                        <div class="day-content empty" onclick="app.switchView('view-home', document.getElementById('nav-home'))">+ Add Meal</div>
-                    </div>
-                    <div class="calendar-day" id="cal-wed">
-                        <div class="day-label">Wed</div>
-                        <div class="day-content empty" onclick="app.switchView('view-home', document.getElementById('nav-home'))">+ Add Meal</div>
-                    </div>
-                    <div class="calendar-day" id="cal-thu">
-                        <div class="day-label">Thu</div>
-                        <div class="day-content empty" onclick="app.switchView('view-home', document.getElementById('nav-home'))">+ Add Meal</div>
-                    </div>
-                    <div class="calendar-day" id="cal-fri">
-                        <div class="day-label">Fri</div>
-                        <div class="day-content empty" onclick="app.switchView('view-home', document.getElementById('nav-home'))">+ Add Meal</div>
-                    </div>
+                <!-- HCI: Norman - Gulf of Evaluation reduced: full week state at a glance -->
+                <p class="subtitle">Manage your upcoming dinners.</p>
+                <div id="calendar-grid"></div>
+                <div id="meal-popover" class="hidden" role="dialog">
+                    <h4 id="popover-title"></h4>
+                    <p id="popover-desc"></p>
+                    <button class="btn-secondary small" onclick="app.closePopover()">Close</button>
                 </div>
             </section>
 
-            <section id="view-specials" class="view hidden">
+            <!-- MY ORDERS / TRACKING VIEW -->
+            <!-- HCI: Nielsen #1 - Visibility of System Status: live order tracking -->
+            <section id="view-orders" class="view">
+                <h2>My Orders</h2>
+                <p class="subtitle">Track & manage active orders.</p>
+                <div id="active-orders-list"></div>
+            </section>
+
+            <!-- SPECIALS VIEW -->
+            <!-- HCI: Error Prevention: Sold Out disables button, prevents invalid order -->
+            <section id="view-specials" class="view">
                 <h2>Today's Specials</h2>
-                <div class="menu-item" id="special-halwa">
-                    <img src="images/gajar-halwa.jpeg" alt="Gajar ka Halwa" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-right: 15px;">
-                    <div>
-                        <h4>Gajar ka Halwa</h4>
-                        <p class="limit-text">Only 2 portions left! Ends at 5:00 PM</p>
-                        <p class="price">Rs. 250</p>
+                <div id="specials-list"></div>
+            </section>
+
+            <!-- PROFILE VIEW -->
+            <section id="view-profile" class="view">
+                <h2>Profile</h2>
+                <div class="card form-card">
+                    <!-- HCI: Error Prevention - Required fields marked with * -->
+                    <div class="form-group">
+                        <label for="profile-name">Name *</label>
+                        <input type="text" id="profile-name" required placeholder="Enter your name">
                     </div>
-                    <button id="btn-halwa" class="btn-primary" onclick="app.checkout('Gajar ka Halwa', 250)">Order Now</button>
+                    <div class="form-group">
+                        <label for="profile-location">Hostel + Room *</label>
+                        <input type="text" id="profile-location" required placeholder="e.g. Hostel 12, Room 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-notes">Delivery Notes</label>
+                        <textarea id="profile-notes" rows="2" placeholder="Leave at reception"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="app.saveProfile()">Save Profile</button>
+                </div>
+
+                <!-- HCI: Universal Design - Accessibility controls -->
+                <div class="section-block">
+                    <h3>Accessibility</h3>
+                    <div class="card" style="display:flex;gap:10px">
+                        <button id="btn-font-toggle" class="btn-secondary small btn-toggle" onclick="app.toggleFontSize()">Large Text</button>
+                        <button id="btn-contrast-toggle" class="btn-secondary small btn-toggle" onclick="app.toggleContrast()">High Contrast</button>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <h3>Active Subscriptions</h3>
+                    <div id="active-subscriptions"></div>
+                </div>
+                <div class="section-block">
+                    <h3>Order History</h3>
+                    <!-- HCI: User Control & Freedom - Cancel pending orders -->
+                    <div id="order-history"></div>
                 </div>
             </section>
 
-            <section id="view-profile" class="view hidden">
-                <h2>Delivery Profile</h2>
-                <div class="form-group">
-                    <label>Hostel Details</label>
-                    <input type="text" id="hostel-input" value="Hostel 12, Room 10">
+            <!-- CHEF DASHBOARD -->
+            <section id="view-chef-dash" class="view">
+                <button class="back-btn" onclick="app.init()">← Logout</button>
+                <h2>Chef Dashboard</h2>
+                <p class="subtitle">Welcome back, Chef!</p>
+
+                <div class="card stat-card">
+                    <h3>Revenue This Week</h3>
+                    <p id="chef-revenue" class="stat-large"></p>
                 </div>
-                <div class="form-group">
-                    <label>Delivery Notes</label>
-                    <textarea id="notes-input" rows="3">Leave at reception.</textarea>
+
+                <div class="section-block">
+                    <h3>Today's Orders</h3>
+                    <!-- HCI: Nielsen #1 - Visibility: tappable status cycles through states -->
+                    <div id="chef-orders-list"></div>
                 </div>
-                <button class="btn-primary" onclick="app.saveProfile()">Save Preferences</button>
-                <p id="profile-msg" class="success-msg hidden">Saved successfully!</p>
+
+                <div class="section-block">
+                    <h3>Post a Special</h3>
+                    <div class="card form-card">
+                        <input type="text" id="special-name" placeholder="Item Name">
+                        <input type="number" id="special-price" placeholder="Price (Rs)">
+                        <input type="number" id="special-portions" placeholder="Portions Available">
+                        <input type="time" id="special-cutoff">
+                        <button class="btn-primary" onclick="app.postSpecial()">Post Special</button>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <h3>Weekly Menu Editor</h3>
+                    <div class="card form-card" id="menu-editor-list"></div>
+                    <button class="btn-primary" style="margin-top:10px" onclick="app.saveWeeklyMenu()">Save Menu</button>
+                </div>
             </section>
         </main>
 
-        <div id="checkout-modal" class="modal hidden">
+        <!-- CART MODAL -->
+        <!-- HCI: Error Prevention - Modal prevents background interaction -->
+        <div id="cart-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content">
-                <h3>Confirm Order</h3>
-                <p id="checkout-item-name"></p>
-                <p id="checkout-price"></p>
-                <hr>
-                <p><strong>Delivering to:</strong> <span id="checkout-address"></span></p>
-                <p class="small-text">Payment via JazzCash</p>
-                <button class="btn-success" onclick="app.confirmOrder()">Pay & Confirm</button>
-                <button class="btn-secondary" onclick="app.closeModal()">Cancel</button>
+                <h3>Your Cart</h3>
+                <div id="cart-items"></div>
+                <div class="cart-summary">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">Rs. 0</span>
+                </div>
+                <div class="checkout-details">
+                    <p><strong>Delivering to:</strong> <span id="cart-address"></span></p>
+                    
+                    <!-- HCI: Error Prevention - Delivery time slot prevents missed deliveries -->
+                    <p style="font-weight:bold;font-size:13px;margin-top:8px">Delivery Time Slot:</p>
+                    <div class="time-slots" id="time-slot-picker">
+                        <div class="time-slot selected" onclick="app.selectSlot(this,'1:00–1:30')" data-slot="1:00–1:30">1:00–1:30</div>
+                        <div class="time-slot" onclick="app.selectSlot(this,'1:30–2:00')" data-slot="1:30–2:00">1:30–2:00</div>
+                        <div class="time-slot" onclick="app.selectSlot(this,'7:00–7:30')" data-slot="7:00–7:30">7:00–7:30</div>
+                        <div class="time-slot" onclick="app.selectSlot(this,'7:30–8:00')" data-slot="7:30–8:00">7:30–8:00</div>
+                    </div>
+
+                    <div class="payment-methods">
+                        <!-- HCI: Universal Design - Multiple payment options, conspicuous orange bars -->
+                        <label class="radio-label"><input type="radio" name="payment" value="jazzcash" checked> JazzCash</label>
+                        <label class="radio-label"><input type="radio" name="payment" value="easypaisa"> Easypaisa</label>
+                        <label class="radio-label"><input type="radio" name="payment" value="cod"> Cash on Delivery</label>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="app.confirmOrder()">Pay & Confirm</button>
+                <button class="btn-secondary" onclick="app.closeCart()">Cancel</button>
             </div>
         </div>
 
         <nav class="bottom-nav">
-            <button id="nav-home" class="nav-item active" onclick="app.switchView('view-home', this)">Home</button>
-            <button id="nav-week" class="nav-item" onclick="app.switchView('view-calendar', this)">My Week</button>
-            <button id="nav-specials" class="nav-item" onclick="app.switchView('view-specials', this)">Specials</button>
-            <button id="nav-profile" class="nav-item" onclick="app.switchView('view-profile', this)">Profile</button>
+            <!-- HCI: Consistency and Standards - Standard bottom navigation -->
+            <button id="nav-home" class="nav-item active" onclick="app.switchView('view-home', this)">
+                <span class="icon">🏠</span><span class="label">Home</span>
+            </button>
+            <button id="nav-orders" class="nav-item" onclick="app.switchView('view-orders', this)">
+                <span class="icon">📦</span><span class="label">Orders</span>
+            </button>
+            <button id="nav-week" class="nav-item" onclick="app.switchView('view-calendar', this)">
+                <span class="icon">📅</span><span class="label">My Week</span>
+            </button>
+            <button id="nav-specials" class="nav-item" onclick="app.switchView('view-specials', this)">
+                <span class="icon">✨</span><span class="label">Specials</span>
+            </button>
+            <button id="nav-profile" class="nav-item" onclick="app.switchView('view-profile', this)">
+                <span class="icon">👤</span><span class="label">Profile</span>
+            </button>
         </nav>
 
-        <!-- NEW: In-App Toast Notification Banner -->
-        <div id="app-toast">Payment successful! Your order is confirmed.</div>
+        <div id="toast-container" class="toast-container" aria-live="polite"></div>
     </div>
-
     <script src="Prototype2Back.js"></script>
 </body>
 </html>
